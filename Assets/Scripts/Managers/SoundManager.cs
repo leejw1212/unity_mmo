@@ -5,6 +5,7 @@ using UnityEngine;
 public class SoundManager 
 {
     AudioSource[] _audioSources = new AudioSource[(int)Define.Sound.MaxCount];
+    Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
 
     //mp3 player -> audio source
     //mp3 music -> audioclip
@@ -30,35 +31,71 @@ public class SoundManager
         }
     }
 
-    public void Play(Define.Sound type, string path, float pitch = 1.0f)
+    public void Clear()
     {
-        if (path.Contains("Sounds/") == false)
-            path = $"Sounds/{path}";
+        foreach (AudioSource audioSource in _audioSources)
+        {
+            audioSource.clip = null;
+            audioSource.Stop();
+        }
+        _audioClips.Clear();
+    }
+
+    public void Play(string path, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
+    {
+        AudioClip audioClip = GetOrAudioClip(path, type);
+
+        Play(audioClip, type, pitch);
+    }
+
+    public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
+    {
+        if (audioClip == null)
+            return;
 
         if (type == Define.Sound.Bgm)
         {
-            AudioClip audioClip = Managers.Resource.Load<AudioClip>(path);
-            if (audioClip == null)
-            {
-                Debug.Log($"AudioClip Missing ! {path}");
-                return;
-            }
+            AudioSource audioSource = _audioSources[(int)Define.Sound.Bgm];
 
-            //TODO
-            
+            if (audioSource.isPlaying)
+                audioSource.Stop();
+
+            audioSource.pitch = pitch;
+            audioSource.clip = audioClip;
+            audioSource.Play();
+
         }
         else
         {
-            AudioClip audioClip = Managers.Resource.Load<AudioClip>(path);
-            if (audioClip == null)
-            {
-                Debug.Log($"AudioClip Missing ! {path}");
-                return;
-            }
-
             AudioSource audioSource = _audioSources[(int)Define.Sound.Effect];
             audioSource.pitch = pitch;
             audioSource.PlayOneShot(audioClip);
         }
+    }
+
+    AudioClip GetOrAudioClip(string path, Define.Sound type = Define.Sound.Effect)
+    {
+        if (path.Contains("Sounds/") == false)
+            path = $"Sounds/{path}";
+
+        AudioClip audioClip = null;
+
+        if (type == Define.Sound.Bgm)
+        {
+            audioClip = Managers.Resource.Load<AudioClip>(path);
+        }
+        else
+        {
+            if (_audioClips.TryGetValue(path, out audioClip) == false)
+            {
+                audioClip = Managers.Resource.Load<AudioClip>(path);
+                _audioClips.Add(path, audioClip);
+            }
+        }
+
+        if (audioClip == null)
+            Debug.Log($"AudioClip Missing ! {path}");
+
+        return audioClip;
     }
 }

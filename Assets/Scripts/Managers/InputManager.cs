@@ -34,4 +34,10 @@ public class InputManager
             }
         }
     }
+
+    public void CLear()
+    {
+        KeyAction = null;
+        MouseAction = null;
+    }
 }
