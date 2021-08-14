@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public abstract class BaseScene : MonoBehaviour
 {
-    Define.Scene _sceneType = Define.Scene.Unknown;
+//    Define.Scene _sceneType = Define.Scene.Unknown;
 
     public Define.Scene SceneType { get; protected set; } = Define.Scene.Unknown;
 
