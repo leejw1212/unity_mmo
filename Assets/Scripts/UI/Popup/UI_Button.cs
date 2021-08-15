@@ -28,14 +28,9 @@ public class UI_Button : UI_Popup
         ItemIcon,
     }
 
-    private void Start()
+    public override void Init()
     {
-        init();
-    }
-
-    public override void init()
-    {
-        base.init();
+        base.Init();
 
         Bind<Button>(typeof(Buttons));
         Bind<Text>(typeof(Texts));

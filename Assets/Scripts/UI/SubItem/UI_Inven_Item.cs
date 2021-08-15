@@ -13,13 +13,7 @@ public class UI_Inven_Item : UI_Base
 
     string _name;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        init();
-    }
-
-    public override void init()
+    public override void Init()
     {
         Bind<GameObject>(typeof(GameObjects));
 

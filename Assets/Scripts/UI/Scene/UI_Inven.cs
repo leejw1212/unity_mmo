@@ -9,14 +9,9 @@ public class UI_Inven : UI_Scene
         GridPanel
     }
 
-    void Start()
+    public override void Init()
     {
-        init();
-    }
-
-    public override void init()
-    {
-        base.init();
+        base.Init();
 
         Bind<GameObject>(typeof(GameObjects));
 
